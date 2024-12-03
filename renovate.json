@@ -1,0 +1,26 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "prHourlyLimit": 10,
+  "rebaseWhen": "behind-base-branch",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 20,
+  "schedule": [
+    "before 4am"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["maven"],
+      "groupName": "All Maven Dependencies",
+      "schedule": ["at any time"]
+    }
+  ],
+  "enabledManagers": ["maven"],
+  "rangeStrategy": "auto"
+}
