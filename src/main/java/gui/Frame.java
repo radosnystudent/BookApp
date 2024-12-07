@@ -1,6 +1,7 @@
 package gui;
 
 import api.IsbnApiCaller;
+import app.filereader.FileChooserAction;
 import model.BookInfo;
 
 import javax.swing.*;
@@ -30,9 +31,11 @@ public class Frame extends JFrame {
         inputPanel.add(isbnLabel, BorderLayout.WEST);
         inputPanel.add(isbnField, BorderLayout.CENTER);
 
-        Button callApiButton = getApiButton(isbnField, api, responseArea);
+        Button chooseFileButton = new Button("Choose .txt file", new FileChooserAction());
 
-        inputPanel.add(callApiButton, BorderLayout.EAST);
+//        Button callApiButton = getApiButton(isbnField, api, responseArea);
+
+        inputPanel.add(chooseFileButton, BorderLayout.EAST);
 
         add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
@@ -40,17 +43,19 @@ public class Frame extends JFrame {
         setVisible(true);
     }
 
-    private static Button getApiButton(JTextField isbnField, IsbnApiCaller api, JTextArea responseArea) {
-        return new Button("Call API", _ -> {
-            String isbn = isbnField.getText();
-            try {
-                BookInfo response = api.callIsbnApi(isbn);
-                if (Objects.nonNull(response)) {
-                    responseArea.setText(String.format("%s - %s", response.getTitle(), String.join(", ", response.getAuthors())));
-                }
-            } catch (Exception ex) {
-                responseArea.setText("Error: " + ex.getMessage());
-            }
-        });
-    }
+
+
+//    private static Button getApiButton(JTextField isbnField, IsbnApiCaller api, JTextArea responseArea) {
+//        return new Button("Call API", _ -> {
+//            String isbn = isbnField.getText();
+//            try {
+//                BookInfo response = api.callIsbnApi(isbn);
+//                if (Objects.nonNull(response)) {
+//                    responseArea.setText(String.format("%s - %s", response.getTitle(), String.join(", ", response.getAuthors())));
+//                }
+//            } catch (Exception ex) {
+//                responseArea.setText("Error: " + ex.getMessage());
+//            }
+//        });
+//    }
 }
