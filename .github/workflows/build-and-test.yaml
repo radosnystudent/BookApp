@@ -24,5 +24,8 @@ jobs:
       - name: Compile the project
         run: mvn --batch-mode compile
 
+      - name: Run tests
+        run: mvn --batch-mode test
+
       - name: Run the Maven verify phase
         run: mvn --batch-mode --update-snapshots verify
