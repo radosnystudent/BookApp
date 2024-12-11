@@ -1,5 +1,6 @@
 package api;
 
+import lombok.NoArgsConstructor;
 import model.BookInfo;
 
 import java.io.BufferedReader;
@@ -8,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 
+@NoArgsConstructor
 public class IsbnApiCaller {
 
     public BookInfo callIsbnApi(String isbn) throws Exception {

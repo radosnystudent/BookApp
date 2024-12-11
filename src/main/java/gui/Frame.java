@@ -2,11 +2,9 @@ package gui;
 
 import api.IsbnApiCaller;
 import app.filereader.FileChooserAction;
-import model.BookInfo;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 public class Frame extends JFrame {
 
@@ -23,13 +21,9 @@ public class Frame extends JFrame {
         responseArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(responseArea);
 
-        JTextField isbnField = new JTextField("9788326841705");
-        JLabel isbnLabel = new JLabel("ISBN:");
 
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new BorderLayout());
-        inputPanel.add(isbnLabel, BorderLayout.WEST);
-        inputPanel.add(isbnField, BorderLayout.CENTER);
 
         Button chooseFileButton = new Button("Choose .txt file", new FileChooserAction());
 
@@ -42,8 +36,6 @@ public class Frame extends JFrame {
 
         setVisible(true);
     }
-
-
 
 //    private static Button getApiButton(JTextField isbnField, IsbnApiCaller api, JTextArea responseArea) {
 //        return new Button("Call API", _ -> {

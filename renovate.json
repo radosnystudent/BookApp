@@ -9,7 +9,7 @@
     "enabled": true,
     "automerge": true
   },
-  "labels": ["dependencies"],
+  "labels": ["dependencies", "maven"],
   "prConcurrentLimit": 20,
   "schedule": [
     "before 4am"

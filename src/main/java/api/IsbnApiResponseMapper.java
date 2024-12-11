@@ -4,9 +4,13 @@ import model.BookInfo;
 import model.api.XmlResponseTags;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.*;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,27 +22,38 @@ class IsbnApiResponseMapper {
 
     public static BookInfo parseResponse(String response) {
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
-            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = parseXmlToDocument(response);
+            String title = getTitle(document);
+            String isbn = getIsbn(document);
+            List<String> authors = createAuthors(document);
 
-            Document document = builder.parse(new InputSource(new StringReader(response)));
-
-            NodeList titleNodes = document.getElementsByTagName(XmlResponseTags.TITLE_TEXT.getCode());
-            String title = titleNodes.item(0).getTextContent();
-
-            NodeList productNodes = document.getElementsByTagName(XmlResponseTags.PRODUCT_IDENTIFIER.getCode());
-            String isbn = productNodes.item(0).getTextContent();
-
-            return BookInfo.builder()
-                    .title(title)
-                    .authors(createAuthors(document))
-                    .isbn(isbn)
-                    .build();
+            return prepareBookInfo(isbn, title, authors);
         } catch (Exception e) {
-            System.out.printf("Error parsing XML: %s", e.getMessage());
+            System.out.printf("Error parsing XML: %s", e);
             return null;
         }
+    }
+
+    private static Document parseXmlToDocument(String response) throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(false);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+
+        return builder.parse(new InputSource(new StringReader(response)));
+    }
+
+    private static String getTitle(Document document) {
+        return document.getElementsByTagName(XmlResponseTags.TITLE_TEXT.getCode()).item(0).getTextContent();
+    }
+
+    private static String getIsbn(Document document) throws XPathExpressionException {
+        XPathFactory xPathFactory = XPathFactory.newInstance();
+        XPath xPath = xPathFactory.newXPath();
+
+        String expression = "//*[local-name()='ProductIdentifier']/*[local-name()='IDValue']";
+        XPathExpression xPathExpression = xPath.compile(expression);
+
+        return (String) xPathExpression.evaluate(document, XPathConstants.STRING);
     }
 
     private static List<String> createAuthors(Document document) {
@@ -58,5 +73,13 @@ class IsbnApiResponseMapper {
         }
 
         return authors;
+    }
+
+    private static BookInfo prepareBookInfo(String isbn, String title, List<String> authors) {
+        return BookInfo.builder()
+                .title(title)
+                .authors(authors)
+                .isbn(isbn)
+                .build();
     }
 }

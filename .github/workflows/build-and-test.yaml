@@ -3,6 +3,10 @@ name: Build on pull request
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
+
 jobs:
   build-and-test:
     name: Build
