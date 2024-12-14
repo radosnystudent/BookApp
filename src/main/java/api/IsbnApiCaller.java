@@ -1,6 +1,7 @@
 package api;
 
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import model.BookInfo;
 
 import java.io.BufferedReader;
@@ -8,9 +9,30 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @NoArgsConstructor
 public class IsbnApiCaller {
+
+    public List<BookInfo> callIsbnApi(List<String> isbnList) {
+        return Stream.ofNullable(isbnList)
+                .flatMap(Collection::stream)
+                .filter(Objects::nonNull)
+                .map(this::callApi)
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    private BookInfo callApi(String isbn) {
+        try {
+            return callIsbnApi(isbn);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public BookInfo callIsbnApi(String isbn) throws Exception {
         String apiUrl = "https://e-isbn.pl/IsbnWeb/api.xml?isbn=" + isbn;

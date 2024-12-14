@@ -12,23 +12,36 @@ import java.util.List;
 @Getter
 public class FileChooserAction implements ActionListener {
 
-    private List<String> isbnList = new ArrayList<>();
+    private final List<FileChooserListener> listeners = new ArrayList<>();
+
+    public void addListener(FileChooserListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(FileChooserListener listener) {
+        listeners.remove(listener);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JFileChooser fileChooser = new JFileChooser();
-        IsbnFileParser parser = new IsbnFileParser();
-        int returnValue = fileChooser.showOpenDialog(null);
+        final JFileChooser fileChooser = new JFileChooser();
+        final IsbnFileParser parser = new IsbnFileParser();
+        final int returnValue = fileChooser.showOpenDialog(null);
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
 
             try {
-                isbnList = parser.parse(selectedFile);
-                JOptionPane.showMessageDialog(null, "Parsed ISBNs:\n" + String.join(", ", isbnList), "Result", JOptionPane.INFORMATION_MESSAGE);
+                notifyListeners(parser.parse(selectedFile));
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+        }
+    }
+
+    private void notifyListeners(List<String> isbnList) {
+        for (FileChooserListener listener : listeners) {
+            listener.onFileParsed(isbnList);
         }
     }
 }

@@ -2,34 +2,32 @@ package gui;
 
 import api.IsbnApiCaller;
 import app.filereader.FileChooserAction;
+import app.filereader.FileChooserListener;
+import model.BookInfo;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
-public class Frame extends JFrame {
+public class Frame extends JFrame implements FileChooserListener {
+
+    private final IsbnApiCaller api;
+    private final JTextArea responseArea;
 
     public Frame(int width, int height, int x, int y) {
         super();
 
-        IsbnApiCaller api = new IsbnApiCaller();
-
+        api = new IsbnApiCaller();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(width, height);
         setLocation(x, y);
 
-        JTextArea responseArea = new JTextArea();
+        responseArea = new JTextArea();
         responseArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(responseArea);
+        final JScrollPane scrollPane = new JScrollPane(responseArea);
 
-
-        JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new BorderLayout());
-
-        Button chooseFileButton = new Button("Choose .txt file", new FileChooserAction());
-
-//        Button callApiButton = getApiButton(isbnField, api, responseArea);
-
-        inputPanel.add(chooseFileButton, BorderLayout.EAST);
+        final JPanel inputPanel = getInputPanel();
 
         add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
@@ -37,17 +35,23 @@ public class Frame extends JFrame {
         setVisible(true);
     }
 
-//    private static Button getApiButton(JTextField isbnField, IsbnApiCaller api, JTextArea responseArea) {
-//        return new Button("Call API", _ -> {
-//            String isbn = isbnField.getText();
-//            try {
-//                BookInfo response = api.callIsbnApi(isbn);
-//                if (Objects.nonNull(response)) {
-//                    responseArea.setText(String.format("%s - %s", response.getTitle(), String.join(", ", response.getAuthors())));
-//                }
-//            } catch (Exception ex) {
-//                responseArea.setText("Error: " + ex.getMessage());
-//            }
-//        });
-//    }
+    private JPanel getInputPanel() {
+        final JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BorderLayout());
+
+        final FileChooserAction action = new FileChooserAction();
+        action.addListener(this);
+        final Button chooseFileButton = new Button("Choose .txt file", action);
+
+        inputPanel.add(chooseFileButton, BorderLayout.EAST);
+        return inputPanel;
+    }
+
+    @Override
+    public void onFileParsed(List<String> isbnList) {
+        final List<BookInfo> results = api.callIsbnApi(isbnList);
+        if (CollectionUtils.isNotEmpty(results)) {
+            results.forEach(r -> responseArea.setText(String.format("%s - %s", r.getTitle(), String.join(", ", r.getAuthors()))));
+        }
+    }
 }
