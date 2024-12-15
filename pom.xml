@@ -15,8 +15,38 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>app.Main</mainClass>
+                        </manifest>
+                    </archive>
+                    <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <testClassesDirectory>${project.build.testOutputDirectory}</testClassesDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
-    <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
@@ -45,7 +75,6 @@
             <version>5.14.2</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
 </project>

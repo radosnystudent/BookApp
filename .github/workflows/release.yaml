@@ -1,0 +1,58 @@
+name: Maven Release Workflow
+
+on:
+  push:
+    tags:
+      - 'v*' # Run only when tag is created
+
+jobs:
+  build-and-release:
+    name: Build and Release Application
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Java version
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Build application
+      - name: Build with Maven
+        run: mvn clean package
+
+      # Prepare artifact
+      - name: Upload JAR as a build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: application-jar
+          path: target/*.jar
+
+      # Create GitHub release
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          body: |
+            Automated release of version ${{ github.ref_name }}.
+
+      # Add JAR to GitHub release
+      - name: Upload JAR to GitHub Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/*.jar
+          asset_name: application-${{ github.ref_name }}.jar
+          asset_content_type: application/java-archive
