@@ -15,8 +15,10 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 class IsbnApiResponseMapper {
+    private static final Logger logger = Logger.getLogger(IsbnApiResponseMapper.class.getName());
 
     private IsbnApiResponseMapper() {}
 
@@ -29,7 +31,8 @@ class IsbnApiResponseMapper {
 
             return prepareBookInfo(isbn, title, authors);
         } catch (Exception e) {
-            System.out.printf("Error parsing XML: %s", e);
+            logger.warning(String.format("Error parsing XML: %s", e));
+
             return null;
         }
     }
