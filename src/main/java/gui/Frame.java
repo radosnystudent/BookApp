@@ -19,7 +19,7 @@ public class Frame extends JFrame implements FileChooserListener {
         super();
 
         api = new IsbnApiCaller();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(width, height);
         setLocation(x, y);
 
