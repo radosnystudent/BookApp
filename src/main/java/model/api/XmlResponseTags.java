@@ -1,8 +1,6 @@
 package model.api;
 
-import lombok.Getter;
-
-@Getter
+@SuppressWarnings("unused")
 public enum XmlResponseTags {
     TITLE_TEXT("TitleText"),
     PRODUCT_IDENTIFIER("ProductIdentifier"),
@@ -15,5 +13,9 @@ public enum XmlResponseTags {
 
     XmlResponseTags(String code) {
         this.code = code;
+    }
+
+    public String getCode() {
+        return code;
     }
 }

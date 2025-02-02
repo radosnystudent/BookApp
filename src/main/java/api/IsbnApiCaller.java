@@ -1,6 +1,5 @@
 package api;
 
-import lombok.NoArgsConstructor;
 import model.BookInfo;
 
 import java.io.BufferedReader;
@@ -13,8 +12,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-@NoArgsConstructor
 public class IsbnApiCaller {
+    public IsbnApiCaller() {
+    }
 
     public List<BookInfo> callIsbnApi(List<String> isbnList) {
         return Stream.ofNullable(isbnList)

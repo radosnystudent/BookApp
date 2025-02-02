@@ -1,8 +1,9 @@
 package gui;
 
 import api.IsbnApiCaller;
-import app.filereader.FileChooserAction;
-import app.filereader.FileChooserListener;
+import app.file.reader.FileChooserAction;
+import app.file.reader.FileChooserListener;
+import app.file.writer.XLSParser;
 import model.BookInfo;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -51,7 +52,9 @@ public class Frame extends JFrame implements FileChooserListener {
     public void onFileParsed(List<String> isbnList) {
         final List<BookInfo> results = api.callIsbnApi(isbnList);
         if (CollectionUtils.isNotEmpty(results)) {
-            results.forEach(r -> responseArea.setText(String.format("%s - %s", r.getTitle(), String.join(", ", r.getAuthors()))));
+            results.forEach(r -> responseArea.append(String.format("%s - %s", r.getTitle(), String.join(", ", r.getAuthors()))));
+
+            XLSParser.saveBooksToXls(results);
         }
     }
 }

@@ -2,7 +2,9 @@ package api;
 
 import model.BookInfo;
 import model.api.XmlResponseTags;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -20,13 +22,18 @@ import java.util.logging.Logger;
 class IsbnApiResponseMapper {
     private static final Logger logger = Logger.getLogger(IsbnApiResponseMapper.class.getName());
 
-    private IsbnApiResponseMapper() {}
+    private IsbnApiResponseMapper() {
+    }
 
     public static BookInfo parseResponse(String response) {
         try {
             Document document = parseXmlToDocument(response);
-            String title = getTitle(document);
             String isbn = getIsbn(document);
+
+            if (isbn == null || isbn.isEmpty()) {
+                return null;
+            }
+            String title = getTitle(document);
             List<String> authors = createAuthors(document);
 
             return prepareBookInfo(isbn, title, authors);
@@ -82,10 +89,6 @@ class IsbnApiResponseMapper {
     }
 
     private static BookInfo prepareBookInfo(String isbn, String title, List<String> authors) {
-        return BookInfo.builder()
-                .title(title)
-                .authors(authors)
-                .isbn(isbn)
-                .build();
+        return new BookInfo(isbn, title, authors);
     }
 }
