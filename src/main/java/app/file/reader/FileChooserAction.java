@@ -10,6 +10,21 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class FileChooserAction implements ActionListener {
+    private JFileChooser fileChooser;
+    private IsbnFileParser parser;
+
+    public FileChooserAction() {
+        fileChooser = new JFileChooser();
+        parser = new IsbnFileParser();
+    }
+
+    void setFileChooser(final JFileChooser chooser) {
+        this.fileChooser = chooser;
+    }
+
+    void setParser(final IsbnFileParser parser) {
+        this.parser = parser;
+    }
 
     private final List<FileChooserListener> listeners = new ArrayList<>();
 
@@ -23,8 +38,6 @@ public class FileChooserAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final JFileChooser fileChooser = new JFileChooser();
-        final IsbnFileParser parser = new IsbnFileParser();
         final int returnValue = fileChooser.showOpenDialog(null);
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
