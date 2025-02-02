@@ -31,7 +31,6 @@ class FileChooserActionTest {
 
     @BeforeEach
     void setUp() {
-//        MockitoAnnotations.openMocks(this);
         fileChooserAction = new FileChooserAction();
         fileChooserAction.setFileChooser(fileChooser);
         fileChooserAction.addListener(listener);

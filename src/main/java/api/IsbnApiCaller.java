@@ -13,8 +13,6 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 public class IsbnApiCaller {
-    public IsbnApiCaller() {
-    }
 
     public List<BookInfo> callIsbnApi(List<String> isbnList) {
         return Stream.ofNullable(isbnList)
