@@ -3,9 +3,11 @@ pull_request_rules:
     conditions:
       - base=main
       - approved-reviews-by=radosnystudent
-      - status-success=Build on pull request
-      - status-success=SonarQube
+      - status-success=Build
+      - status-success=Build and analyze
       - status-success=CodeQL
+      - status-success=Analyze (java-kotlin)
+      - status-success=SonarCloud Code Analysis
       - -conflict
     actions:
       merge:
