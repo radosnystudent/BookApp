@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public class XLSParser {
-    private static final String outputPath = "src/output/Books.xls";
+    private static final String path = "src/output/Books.xls";
     private static final Logger logger = Logger.getLogger(XLSParser.class.getName());
 
     private XLSParser() {
@@ -62,7 +62,7 @@ public class XLSParser {
                 }
             }
 
-            try (FileOutputStream fileOut = new FileOutputStream(outputPath)) {
+            try (FileOutputStream fileOut = new FileOutputStream(path)) {
                 workbook.write(fileOut);
             }
 

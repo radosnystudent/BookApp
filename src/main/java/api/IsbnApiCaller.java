@@ -1,18 +1,28 @@
 package api;
 
 import model.BookInfo;
+import model.api.exceptions.IsbnApiException;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.HttpClientResponseHandler;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public class IsbnApiCaller {
+public class IsbnApiCaller implements Serializable {
+
+    private static final Logger log = LoggerFactory.getLogger(IsbnApiCaller.class);
 
     public List<BookInfo> callIsbnApi(List<String> isbnList) {
         return Stream.ofNullable(isbnList)
@@ -26,34 +36,41 @@ public class IsbnApiCaller {
     private BookInfo callApi(String isbn) {
         try {
             return callIsbnApi(isbn);
-        } catch (Exception e) {
+        } catch (IsbnApiException e) {
+            log.error(e.getMessage(), e);
             return null;
         }
     }
 
-    public BookInfo callIsbnApi(String isbn) throws Exception {
+    public BookInfo callIsbnApi(String isbn) throws IsbnApiException {
         String apiUrl = "https://e-isbn.pl/IsbnWeb/api.xml?isbn=" + isbn;
-        URL url = URI.create(apiUrl).toURL();
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Accept", "application/xml");
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpGet request = new HttpGet(apiUrl);
+            request.setHeader("Accept", "application/xml");
 
-        int responseCode = connection.getResponseCode();
-        if (responseCode != 200) {
-            throw new RuntimeException("HTTP GET Request Failed with Error Code: " + responseCode);
+            HttpClientResponseHandler<String> responseHandler = (ClassicHttpResponse response) -> {
+                int statusCode = response.getCode();
+                if (statusCode != 200) {
+                    throw new IsbnApiException("HTTP GET Request Failed with Error Code: " + statusCode);
+                }
+
+                HttpEntity entity = response.getEntity();
+                if (entity == null) {
+                    throw new IsbnApiException("No response entity found");
+                }
+
+                try {
+                    return EntityUtils.toString(entity);
+                } catch (ParseException e) {
+                    throw new IsbnApiException("Failed to parse response entity", e);
+                }
+            };
+
+            String responseBody = httpClient.execute(request, responseHandler);
+            return IsbnApiResponseMapper.parseResponse(responseBody);
+        } catch (IOException e) {
+            throw new IsbnApiException("Failed to execute HTTP request", e);
         }
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        StringBuilder response = new StringBuilder();
-        String line;
-
-        while ((line = reader.readLine()) != null) {
-            response.append(line);
-        }
-        reader.close();
-        connection.disconnect();
-
-        return IsbnApiResponseMapper.parseResponse(response.toString());
     }
 }

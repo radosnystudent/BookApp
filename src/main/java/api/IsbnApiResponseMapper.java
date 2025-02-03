@@ -2,6 +2,8 @@ package api;
 
 import model.BookInfo;
 import model.api.XmlResponseTags;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -17,10 +19,9 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 class IsbnApiResponseMapper {
-    private static final Logger logger = Logger.getLogger(IsbnApiResponseMapper.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(IsbnApiResponseMapper.class);
 
     private IsbnApiResponseMapper() {
     }
@@ -38,7 +39,7 @@ class IsbnApiResponseMapper {
 
             return prepareBookInfo(isbn, title, authors);
         } catch (Exception e) {
-            logger.warning(String.format("Error parsing XML: %s", e));
+            logger.error(String.format("Error parsing XML: %s", e));
 
             return null;
         }

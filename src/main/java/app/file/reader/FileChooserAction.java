@@ -1,5 +1,7 @@
 package app.file.reader;
 
+import model.exceptions.FileChooserActionException;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +39,7 @@ public class FileChooserAction implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) throws FileChooserActionException {
         final int returnValue = fileChooser.showOpenDialog(null);
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -46,7 +48,7 @@ public class FileChooserAction implements ActionListener {
             try {
                 notifyListeners(parser.parse(selectedFile));
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                throw new FileChooserActionException("Could not notify listeners! ", ex);
             }
         }
     }
