@@ -1,7 +1,7 @@
 pull_request_rules:
   - name: Automerge approved PRs
     conditions:
-      - base=master
+      - base=main
       - approved-reviews-by=radosnystudent
       - status-success=Build (pull_request)
       - status-success=Analyze (java-kotlin)
@@ -15,7 +15,7 @@ pull_request_rules:
 
   - name: Notify author about conflicts
     conditions:
-      - base=master
+      - base=main
       - conflict
     actions:
       comment:
