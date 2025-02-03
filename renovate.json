@@ -9,18 +9,30 @@
     "enabled": true,
     "automerge": true
   },
-  "labels": ["dependencies", "maven"],
+  "labels": [
+    "dependencies",
+    "maven"
+  ],
   "prConcurrentLimit": 20,
   "schedule": [
     "before 4am"
   ],
   "packageRules": [
     {
-      "matchManagers": ["maven"],
+      "matchManagers": [
+        "maven"
+      ],
       "groupName": "All Maven Dependencies",
-      "schedule": ["at any time"]
+      "schedule": [
+        "at any time"
+      ]
     }
   ],
-  "enabledManagers": ["maven"],
-  "rangeStrategy": "auto"
+  "enabledManagers": [
+    "maven"
+  ],
+  "rangeStrategy": "auto",
+  "reviewers": [
+    "radosnystudent"
+  ]
 }
