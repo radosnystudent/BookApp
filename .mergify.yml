@@ -1,0 +1,22 @@
+pull_request_rules:
+  - name: Automerge approved PRs
+    conditions:
+      - base=main
+      - approved-reviews-by=radosnystudent
+      - status-success=Build
+      - status-success=Build and analyze
+      - status-success=CodeQL
+      - status-success=Analyze (java-kotlin)
+      - status-success=SonarCloud Code Analysis
+      - -conflict
+    actions:
+      merge:
+        method: rebase
+
+  - name: Notify author about conflicts
+    conditions:
+      - base=main
+      - conflict
+    actions:
+      comment:
+        message: "@{{author}} Your PR is in conflict and cannot be merged."
