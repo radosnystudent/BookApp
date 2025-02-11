@@ -21,8 +21,17 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 public class IsbnApiCaller implements Serializable {
-
     private static final Logger log = LoggerFactory.getLogger(IsbnApiCaller.class);
+
+    private final CloseableHttpClient httpClient;
+
+    public IsbnApiCaller() {
+        this(HttpClients.createDefault());
+    }
+
+    public IsbnApiCaller(CloseableHttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
 
     public List<BookInfo> callIsbnApi(List<String> isbnList) {
         return Stream.ofNullable(isbnList)
@@ -42,10 +51,10 @@ public class IsbnApiCaller implements Serializable {
         }
     }
 
-    public BookInfo callIsbnApi(String isbn) throws IsbnApiException {
+    private BookInfo callIsbnApi(String isbn) throws IsbnApiException {
         String apiUrl = "https://e-isbn.pl/IsbnWeb/api.xml?isbn=" + isbn;
 
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+        try {
             HttpGet request = new HttpGet(apiUrl);
             request.setHeader("Accept", "application/xml");
 
