@@ -74,7 +74,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
-            <version>25-ea+6</version>
+            <version>25-ea+8</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
