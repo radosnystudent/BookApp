@@ -74,7 +74,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
-            <version>25-ea+10</version>
+            <version>25-ea+11</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.16.1</version>
+            <version>5.17.0</version>
             <scope>test</scope>
         </dependency>
 
