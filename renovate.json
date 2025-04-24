@@ -1,14 +1,16 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "prHourlyLimit": 10,
   "rebaseWhen": "behind-base-branch",
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true,
-    "addLabels": ["lockfile"]
+    "addLabels": [
+      "lockfile"
+    ]
   },
   "labels": [
     "dependencies",
@@ -16,41 +18,69 @@
   ],
   "prConcurrentLimit": 20,
   "schedule": [
-    "before 4am"
+    "at any time"
   ],
   "packageRules": [
     {
-      "matchUpdateTypes": ["patch"],
+      "matchUpdateTypes": [
+        "patch"
+      ],
       "automerge": true,
-      "addLabels": ["patch"],
+      "addLabels": [
+        "patch"
+      ],
       "autoApprove": true
     },
     {
-      "matchUpdateTypes": ["minor"],
-      "reviewers": ["radosnystudent"],
-      "addLabels": ["minor"]
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "reviewers": [
+        "radosnystudent"
+      ],
+      "addLabels": [
+        "minor"
+      ]
     },
     {
-      "matchUpdateTypes": ["major"],
-      "reviewers": ["radosnystudent"],
-      "addLabels": ["major"]
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "reviewers": [
+        "radosnystudent"
+      ],
+      "addLabels": [
+        "major"
+      ]
     },
     {
-      "matchUpdateTypes": ["pin"],
+      "matchUpdateTypes": [
+        "pin"
+      ],
       "automerge": true,
-      "addLabels": ["pin"],
+      "addLabels": [
+        "pin"
+      ],
       "autoApprove": true
     },
     {
-      "matchUpdateTypes": ["digest"],
+      "matchUpdateTypes": [
+        "digest"
+      ],
       "automerge": true,
-      "addLabels": ["digest"],
+      "addLabels": [
+        "digest"
+      ],
       "autoApprove": true
     },
     {
-      "matchUpdateTypes": ["bump"],
+      "matchUpdateTypes": [
+        "bump"
+      ],
       "automerge": true,
-      "addLabels": ["bump"],
+      "addLabels": [
+        "bump"
+      ],
       "autoApprove": true
     }
   ],
@@ -61,7 +91,6 @@
   "automergeType": "pr",
   "platformAutomerge": true,
   "dependencyDashboard": true,
-  "schedule": ["at any time"],
   "prNotPendingHours": 8,
-  "stabilityDays": 0
+  "minimumReleaseAge": null
 }
